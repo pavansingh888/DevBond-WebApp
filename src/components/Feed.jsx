@@ -25,7 +25,8 @@ const Feed = () => {
   return (
     feed ? <div className='flex-grow flex justify-center'>
         <UserCard user={feed[0]}/>
-    </div> : <div className='flex-grow justify-center '>
+    </div> : <div className='flex-grow h-screen'>
+
     </div>
   )
 }
