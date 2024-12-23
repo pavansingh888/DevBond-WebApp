@@ -5,8 +5,8 @@ const UserCard = ({user}) => {
      const {firstName, lastName, age, gender, about, photoUrl } = user;
      
   return (
-    <div>
-      <div className="card glass w-96 my-10 bg-info-content">
+    <div className="flex flex-col justify-center my-8 mx-8 max-[320px]:mx-4 w-96 max-[470px]:w-72 max-[320px]:w-full">
+      <div className="card glass w-full bg-info-content ">
         <figure>
           <img
             src={photoUrl}
