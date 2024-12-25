@@ -6,15 +6,18 @@ import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../utils/constants";
 
 const Login = () => {
-  const [emailId, setEmailId] = useState("Rahul@gmail.com");
-  const [password, setPassword] = useState("Rahul@1234");
+  const [emailId, setEmailId] = useState("");
+  const [password, setPassword] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [isLoginForm, setIsLoginForm] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleLogin = async () => {
     try {
       const res = await axios.post(
-        BASE_URL+"/login",
+        BASE_URL + "/login",
         {
           emailId,
           password,
@@ -23,15 +26,77 @@ const Login = () => {
       );
       dispatch(addUser(res.data));
       // console.log(res.data);
-      navigate('/');
+      navigate("/");
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleSignUp = async () => {
+    try {
+      const res = await axios.post(
+        BASE_URL + "/signup",
+        {
+          firstName,
+          lastName,
+          emailId,
+          password,
+        },
+        { withCredentials: true }
+      );
+      dispatch(addUser(res.data.data));
+      // console.log(res.data);
+      navigate("/profile");
     } catch (err) {
       console.error(err);
     }
   };
 
   return (
-    <div className="flex flex-col items-center space-y-4 h-screen w-full">
-      <h1 className="font-bold text-2xl mt-20">Login</h1>
+    <div className="flex flex-col items-center h-screen w-full space-y-4">
+      <h1 className="font-bold text-2xl mt-20">
+        {isLoginForm ? "Login" : "Sign Up"}
+      </h1>
+
+      {!isLoginForm && (
+        <>
+          <label className="input input-bordered flex items-center gap-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 16 16"
+              fill="currentColor"
+              className="h-4 w-4 opacity-70"
+            >
+              <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM12.735 14c.618 0 1.093-.561.872-1.139a6.002 6.002 0 0 0-11.215 0c-.22.578.254 1.139.872 1.139h9.47Z" />
+            </svg>
+            <input
+              type="text"
+              className="grow"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              placeholder="First name"
+            />
+          </label>
+          <label className="input input-bordered flex items-center gap-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 16 16"
+              fill="currentColor"
+              className="h-4 w-4 opacity-70"
+            >
+              <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM12.735 14c.618 0 1.093-.561.872-1.139a6.002 6.002 0 0 0-11.215 0c-.22.578.254 1.139.872 1.139h9.47Z" />
+            </svg>
+            <input
+              type="text"
+              className="grow"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              placeholder="Last name"
+            />
+          </label>
+        </>
+      )}
+
       <label className="input input-bordered flex items-center gap-2">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -71,10 +136,23 @@ const Login = () => {
           placeholder="Password"
         />
       </label>
-      <div className="flex items-center">
-        <button className="btn glass px-24" onClick={handleLogin}>
+
+      <div className="flex items-center pt-4">
+        <button
+          className="btn glass w-60"
+          onClick={isLoginForm ? handleLogin : handleSignUp}
+        >
           {" "}
-          Login{" "}
+          {isLoginForm ? "Login" : "Sign Up"}{" "}
+        </button>
+      </div>
+      <div className="flex items-center">
+        <button
+          className="btn btn-active btn-neutral w-60 "
+          onClick={() => setIsLoginForm((value) => !value)}
+        >
+          {" "}
+          {isLoginForm ? "New User? Signup Here" : "Existing User? Login Here"}{" "}
         </button>
       </div>
     </div>

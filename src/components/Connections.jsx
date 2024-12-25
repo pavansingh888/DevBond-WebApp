@@ -27,12 +27,12 @@ const Connections = () => {
   }, []);
 
   if (!connections) {
-    return;
+    return <div className="min-h-screen"></div>;
   }
 
   if (connections.length === 0) {
-    <div>
-      <h1>No connections found.</h1>
+    return <div className="min-h-screen flex justify-center font-semibold mt-10 text-lg">
+      <h1>No connections found!</h1>
     </div>;
   }
 
