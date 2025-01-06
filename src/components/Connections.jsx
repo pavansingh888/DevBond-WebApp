@@ -1,22 +1,25 @@
 import axios from "axios";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { BASE_URL } from "../utils/constants";
 import { useDispatch, useSelector } from "react-redux";
-import {addConnections} from "../utils/connectionsSlice";
+import { addConnections } from "../utils/connectionsSlice";
 
 const Connections = () => {
   const dispatch = useDispatch();
   const connections = useSelector((store) => store.connections);
+  const [loading, setLoading] = useState(false);
 
   const fetchConnections = async () => {
+    setLoading(true);
     try {
       const res = await axios.get(BASE_URL + "/user/connections", {
         withCredentials: true,
       });
-      // console.log(res.data.data);
       dispatch(addConnections(res?.data?.data));
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -26,41 +29,66 @@ const Connections = () => {
     }
   }, []);
 
+  if (loading) {
+    return (
+      <div className="min-h-screen flex justify-center items-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-primary border-solid"></div>
+      </div>
+    );
+  }
+
   if (!connections) {
-    return <div className="min-h-screen"></div>;
+    return <div className="min-h-screen "></div>;
   }
 
   if (connections.length === 0) {
-    return <div className="min-h-screen flex justify-center font-semibold mt-10 text-lg">
-      <h1>No connections found!</h1>
-    </div>;
+    return (
+      <div className="min-h-screen flex justify-center items-center font-semibold mt-10 text-lg">
+        <h1>No connections found!</h1>
+      </div>
+    );
   }
 
-  return (<div className="flex flex-col items-center justify-start min-h-screen">
-    <h1 className="text-bold text-white text-3xl my-10">Connections</h1>
-    {connections.map((connection) => {
-      const { firstName, lastName, photoUrl, age, gender, about,_id } =
-        connection;
-      return (
-        <div className=" flex m-1 p-4 rounded-lg bg-base-300 w-1/2 mx-auto" key={_id}>
-          <div>
-            <img
-              alt="photo"
-              className="w-20 h-20 rounded-full"
-              src={photoUrl}
-            />
-          </div>
-          <div className="text-left mx-4 ">
-            <h2 className="font-bold text-xl">
-              {firstName + " " + lastName}
-            </h2>
-            {age && gender && <p>{age + ", " + gender}</p>}
-            <p>{about}</p>
-          </div>
-        </div>
-      );
-    })}
-  </div>);
+  return (
+    <div className="flex flex-col items-center justify-start min-h-screen bg-white">
+      <h1 className="font-bold text-black text-3xl my-10">Connections</h1>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 px-4 w-full">
+        {connections.map((connection) => {
+          const { firstName, lastName, photoUrl, age, gender, about, _id } =
+            connection;
+          return (
+            <div
+              className="card bg-slate-200 text-black shadow-md hover:shadow-lg rounded-lg p-4 flex flex-col items-center justify-around" 
+              key={_id}
+            >
+              <div className="w-20 h-20 rounded-full overflow-hidden bg-gray-300">
+                <img
+                  alt="User"
+                  className="w-full h-full object-cover"
+                  src={photoUrl}
+                />
+              </div>
+              <div className="text-center mt-4">
+                <h2 className="font-bold text-lg">{`${firstName} ${lastName}`}</h2>
+                {age && gender && (
+                  <p className="text-sm text-gray-500">{`${age}, ${gender}`}</p>
+                )}
+                <p className="text-sm text-gray-700 mt-2">{about}</p>
+              </div>
+              <div className="flex gap-2 mt-4 ">
+                <button className="btn btn-sm btn-success text-white ">
+                  Message
+                </button>
+                <button className="btn btn-sm btn-error text-gray-100">
+                  Remove
+                </button>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
 };
 
 export default Connections;

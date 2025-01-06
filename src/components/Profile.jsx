@@ -12,7 +12,7 @@ const Profile = () => {
 
   return (
     user && (
-      <div className='flex-grow items-center min-h-screen'>
+      <div className="flex flex-col items-center min-h-screen bg-gradient-to-b from-gray-100 to-gray-200">
       <EditProfile user={user} showProfile={showProfile} handleShowProfile={()=> {showProfile ? setShowProfile(false) : setShowProfile(true)}}/>
     </div>
     )

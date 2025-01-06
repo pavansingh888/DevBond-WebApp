@@ -24,7 +24,7 @@ const UserCard = ({user}) => {
 
   return (
     <div className="flex flex-col justify-center my-8 mx-8 max-[320px]:mx-4 w-96 max-[470px]:w-72 max-[320px]:w-full">
-      <div className="card glass w-full bg-info-content ">
+      <div className="card glass w-full bg-gradient-to-r from-rose-500 to-blue-400  text-white shadow-blue-900 shadow-2xl">
         <figure>
           <img
             src={photoUrl}
@@ -34,10 +34,10 @@ const UserCard = ({user}) => {
         <div className="card-body">
           <h2 className="card-title">{firstName + " " + lastName}</h2>
           {age && gender && <p>{age+", "+gender}</p>}
-          <p>{about}</p>
-          <div className="card-actions justify-center mt-4">
-            <button className="btn btn-accent"  onClick={() => handleSendRequest("ignored", _id)}>Ignore</button>
-            <button className="btn btn-primary"  onClick={() => handleSendRequest("interested", _id)}>Interested</button>
+          <p className="text-gray-100">{about}</p>
+          <div className="card-actions justify-center mt-4 ">
+            <button className="btn btn-accent text-white"  onClick={() => handleSendRequest("ignored", _id)}>Ignore</button>
+            <button className="btn btn-primary text-white"  onClick={() => handleSendRequest("interested", _id)}>Interested</button>
           </div>
         </div>
       </div>

@@ -96,108 +96,138 @@ const EditProfile = ({ user, showProfile, handleShowProfile }) => {
 
   return (
     <>
-      <div className="flex justify-center flex-wrap">
-        {showProfile && <UserCard user={{firstName,lastName,about,age,gender,photoUrl}}/>}
-        <div className="w-96 max-[470px]:w-72 max-[320px]:w-full max-[320px]:mx-4 mx-8 bg-base-300 flex flex-col items-start justify-center py-8 px-8 rounded-xl my-8">
-          <h2 className="text-2xl font-bold self-center mb-2 mt-2">
-            Edit Profile
-          </h2>
-          <label className=" flex flex-col items-start gap-1 w-full mt-2">
-            First Name :
+  <div className="container mx-auto py-8 text-gray-700">
+    <div className="flex flex-wrap justify-center gap-8">
+      {showProfile && (
+        <UserCard user={{ firstName, lastName, about, age, gender, photoUrl }} />
+      )}
+      <div className="w-full max-w-lg bg-white shadow-lg rounded-lg p-6">
+        <h2 className="text-2xl font-bold text-center mb-6">Edit Profile</h2>
+        <form className="space-y-4">
+          {/* First Name */}
+          <div className="form-control">
+            <label className="label text-sm font-medium text-gray-500">First Name:</label>
             <input
               type="text"
-              className="input input-bordered  w-full max-w-2xl"
+              className="input input-bordered w-full focus:outline-none focus:ring focus:ring-blue-300 bg-gray-200"
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
+              placeholder="Enter your first name"
             />
-          </label>
-          <label className=" flex flex-col items-start gap-2 w-full mt-2">
-            Last Name :
+          </div>
+          {/* Last Name */}
+          <div className="form-control">
+            <label className="label text-sm font-medium text-gray-500">Last Name:</label>
             <input
               type="text"
-              className="input input-bordered  w-full max-w-xs"
+              className="input input-bordered w-full focus:outline-none focus:ring focus:ring-blue-300 bg-gray-200"
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
+              placeholder="Enter your last name"
             />
-          </label>
-          <label className=" flex flex-col items-start gap-1 w-full mt-2">
-            Photo URL :
+          </div>
+          {/* Photo URL */}
+          <div className="form-control">
+            <label className="label text-sm font-medium text-gray-500">Photo URL:</label>
             <input
               type="text"
-              className="input input-bordered  w-full max-w-xs"
+              className="input input-bordered w-full focus:outline-none focus:ring focus:ring-blue-300 bg-gray-200"
               value={photoUrl}
               onChange={(e) => setPhotoUrl(e.target.value)}
+              placeholder="Enter the photo URL"
             />
-          </label>
-          <label className=" flex flex-col items-start gap-1 w-full mt-2">
-            Age :
+          </div>
+          {/* Age */}
+          <div className="form-control">
+            <label className="label text-sm font-medium text-gray-500">Age:</label>
             <input
-              type="text"
-              className="input input-bordered  w-full max-w-xs"
+              type="number"
+              className="input input-bordered  py w-full focus:outline-none focus:ring focus:ring-blue-300 bg-gray-200 appearance-none overflow-hidden"
               value={age}
               onChange={(e) => setAge(e.target.value)}
+              placeholder="Enter your age"
             />
-          </label>
-          <label className=" flex flex-col items-start gap-1 w-full mt-2">
-            Gender :
-            <div className="space-x-2 flex items-center">
-              <input
-                type="radio"
-                name="gender"
-                value="male"
-                className="radio radio-info radio-sm"
-                checked={gender === "male"}
-                onChange={(e) => setGender(e.target.value)}
-              />{" "}
-              &nbsp; Male
-              <input
-                type="radio"
-                name="gender"
-                value="female"
-                checked={gender === "female"}
-                className="radio radio-info radio-sm"
-                onChange={(e) => setGender(e.target.value)}
-              />
-              &nbsp; Female
-              <input
-                type="radio"
-                name="gender"
-                value="others"
-                checked={gender === "others"}
-                className="radio radio-info radio-sm"
-                onChange={(e) => setGender(e.target.value)}
-              />
-              &nbsp; others
+          </div>
+          {/* Gender */}
+          <div className="form-control">
+            <label className="label text-sm font-medium text-gray-500">Gender:</label>
+            <div className="flex items-center space-x-4">
+              <label className="flex items-center">
+                <input
+                  type="radio"
+                  name="gender"
+                  value="male"
+                  checked={gender === "male"}
+                  className="radio radio-info"
+                  onChange={(e) => setGender(e.target.value)}
+                />
+                <span className="ml-2">Male</span>
+              </label>
+              <label className="flex items-center text-gray-500">
+                <input
+                  type="radio"
+                  name="gender"
+                  value="female"
+                  checked={gender === "female"}
+                  className="radio radio-info"
+                  onChange={(e) => setGender(e.target.value)}
+                />
+                <span className="ml-2">Female</span>
+              </label>
+              <label className="flex items-center text-gray-500">
+                <input
+                  type="radio"
+                  name="gender"
+                  value="others"
+                  checked={gender === "others"}
+                  className="radio radio-info"
+                  onChange={(e) => setGender(e.target.value)}
+                />
+                <span className="ml-2">Other</span>
+              </label>
             </div>
-          </label>
-          <label className=" flex flex-col items-start gap-1 w-full mt-2">
-            About :
+          </div>
+          {/* About */}
+          <div className="form-control">
+            <label className="label text-sm font-medium">About:</label>
             <textarea
-              type="text"
-              className="textarea textarea-md w-full"
+              className="textarea textarea-bordered w-full bg-gray-200 focus:outline-none focus:ring focus:ring-blue-300"
               value={about}
               onChange={(e) => setAbout(e.target.value)}
+              placeholder="Write something about yourself"
             ></textarea>
-          </label>
-          {error && <p className="text-error py-2">{error}</p>}
-          <div className="mt-4 flex justify-evenly w-full flex-wrap">
-            <button className="btn btn-secondary my-1" onClick={saveProfile}>
+          </div>
+          {error && <p className="text-red-500 text-sm">{error}</p>}
+          {/* Buttons */}
+          <div className="flex flex-col items-center space-y-4 ">
+            <button
+              type="button"
+              className="btn btn-primary text-white w-full"
+              onClick={saveProfile}
+            >
               Save Profile
             </button>
-            <button className="btn btn-info my-1" onClick={handleShowProfile}>
+            <button
+              type="button"
+              className="btn btn-secondary text-white w-full"
+              onClick={handleShowProfile}
+            >
               {showProfile ? "Hide Profile" : "My Profile"}
             </button>
           </div>
-        </div>
+        </form>
       </div>
-      {showToast && (
-        <div className="toast toast-top toast-center z-50">
-          <div className="alert alert-success">
-            <span>Profile saved successfully!</span>
-          </div>
-        </div>
-      )}
-    </>
+    </div>
+  </div>
+  {showToast && (
+    <div className="toast toast-top toast-center z-50">
+      <div className="alert alert-success shadow-lg">
+        <span>Profile saved successfully!</span>
+      </div>
+    </div>
+  )}
+</>
+
   );
 };
 

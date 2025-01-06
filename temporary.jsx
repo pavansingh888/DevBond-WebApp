@@ -7,8 +7,8 @@ import { BASE_URL } from "../utils/constants";
 
 const Login = () => {
   const [error, setError] = useState("");
-  const [emailId, setEmailId] = useState("aman@gmail.com");
-  const [password, setPassword] = useState("Aman@1234");
+  const [emailId, setEmailId] = useState("");
+  const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [isLoginForm, setIsLoginForm] = useState(true);
@@ -46,7 +46,7 @@ const Login = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-500 to-indigo-700 text-gray-700">
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-500 to-indigo-700">
       <div className="card shadow-lg w-full max-w-md bg-white rounded-xl p-8">
         <h1 className="text-2xl font-bold text-center mb-6">
           {isLoginForm ? "Login to Your Account" : "Create an Account"}
@@ -55,7 +55,7 @@ const Login = () => {
           <p className="text-red-500 text-center mb-4">{error}</p>
         )}
         <form
-          className="space-y-4 "
+          className="space-y-4"
           onSubmit={(e) => {
             e.preventDefault();
             isLoginForm ? handleLogin() : handleSignUp();
@@ -63,13 +63,13 @@ const Login = () => {
         >
           {!isLoginForm && (
             <>
-              <div className="form-control ">
+              <div className="form-control">
                 <label className="label">
-                  <span className="label-text font-medium text-gray-500">First Name</span>
+                  <span className="label-text font-medium">First Name</span>
                 </label>
                 <input
                   type="text"
-                  className="input input-bordered bg-white"
+                  className="input input-bordered"
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
                   placeholder="Enter your first name"
@@ -77,11 +77,11 @@ const Login = () => {
               </div>
               <div className="form-control">
                 <label className="label">
-                  <span className="label-text font-medium text-gray-500">Last Name</span>
+                  <span className="label-text font-medium">Last Name</span>
                 </label>
                 <input
                   type="text"
-                  className="input bg-white input-bordered"
+                  className="input input-bordered"
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
                   placeholder="Enter your last name"
@@ -91,11 +91,11 @@ const Login = () => {
           )}
           <div className="form-control">
             <label className="label">
-              <span className="label-text font-medium text-gray-500">Email Address</span>
+              <span className="label-text font-medium">Email Address</span>
             </label>
             <input
               type="email"
-              className="input input-bordered bg-white"
+              className="input input-bordered"
               value={emailId}
               onChange={(e) => setEmailId(e.target.value)}
               placeholder="Enter your email"
@@ -104,11 +104,11 @@ const Login = () => {
           </div>
           <div className="form-control">
             <label className="label">
-              <span className="label-text font-medium text-gray-500">Password</span>
+              <span className="label-text font-medium">Password</span>
             </label>
             <input
               type="password"
-              className="input input-bordered bg-white"
+              className="input input-bordered "
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Enter your password"
@@ -117,7 +117,7 @@ const Login = () => {
           </div>
           <button
             type="submit"
-            className="btn btn-primary text-white w-full mt-4"
+            className="btn btn-primary w-full mt-4"
           >
             {isLoginForm ? "Login" : "Sign Up"}
           </button>
