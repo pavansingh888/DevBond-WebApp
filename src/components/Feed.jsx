@@ -26,7 +26,7 @@ const Feed = () => {
   // if no feed data is available - display loading message or prompt to log in
   if (!feed) {
     return (
-      <div className="min-h-screen flex justify-center items-center">
+      <div className="min-h-screen flex justify-center items-center ">
         <h1 className="text-lg font-semibold text-gray-600">Login to get started</h1>
       </div>
     );

@@ -4,6 +4,7 @@ import axios from "axios";
 import { addUser } from "../utils/userSlice";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../utils/constants";
+import { Link } from "react-router-dom";
 
 const Login = () => {
   const [error, setError] = useState("");
@@ -46,14 +47,27 @@ const Login = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-500 to-indigo-700 text-gray-700">
-      <div className="card shadow-lg w-full max-w-md bg-white rounded-xl p-8">
+    <div className="items-center justify-evenly min-h-screen  text-gray-700 flex flex-wrap ">
+      
+      <div className="intro-container m-6 py-8 md:w-[500px]">
+        <div className="flex-1 pb-2 text-center md:text-left">
+          <Link
+            to="/"
+            className=" text-5xl normal-case font-bold text-[#0866ff]"
+          >
+            #DEVBOND
+          </Link>
+        </div>
+        <h2 className="tag-line text-2xl font-medium text-gray-900 text-center md:text-left">
+          DevBond helps you connect and share with the developers in your life.
+        </h2>
+      </div>
+
+      <div className="card shadow-lg w-[400px] bg-white rounded-xl p-8 m-6">
         <h1 className="text-2xl font-bold text-center mb-6">
           {isLoginForm ? "Login to Your Account" : "Create an Account"}
         </h1>
-        {error && (
-          <p className="text-red-500 text-center mb-4">{error}</p>
-        )}
+        {error && <p className="text-red-500 text-center mb-4">{error}</p>}
         <form
           className="space-y-4 "
           onSubmit={(e) => {
@@ -65,7 +79,9 @@ const Login = () => {
             <>
               <div className="form-control ">
                 <label className="label">
-                  <span className="label-text font-medium text-gray-500">First Name</span>
+                  <span className="label-text font-medium text-gray-500">
+                    First Name
+                  </span>
                 </label>
                 <input
                   type="text"
@@ -77,7 +93,9 @@ const Login = () => {
               </div>
               <div className="form-control">
                 <label className="label">
-                  <span className="label-text font-medium text-gray-500">Last Name</span>
+                  <span className="label-text font-medium text-gray-500">
+                    Last Name
+                  </span>
                 </label>
                 <input
                   type="text"
@@ -91,7 +109,9 @@ const Login = () => {
           )}
           <div className="form-control">
             <label className="label">
-              <span className="label-text font-medium text-gray-500">Email Address</span>
+              <span className="label-text font-medium text-gray-500">
+                Email Address
+              </span>
             </label>
             <input
               type="email"
@@ -104,7 +124,9 @@ const Login = () => {
           </div>
           <div className="form-control">
             <label className="label">
-              <span className="label-text font-medium text-gray-500">Password</span>
+              <span className="label-text font-medium text-gray-500">
+                Password
+              </span>
             </label>
             <input
               type="password"
