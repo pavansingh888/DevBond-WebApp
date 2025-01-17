@@ -24,6 +24,16 @@ const Footer = () => {
             </span>
           </p>
         </div>
+
+        <nav>
+    <h6 className="footer-title">Legal</h6>
+    <a className="link link-hover" href='https://merchant.razorpay.com/policy/PkX8tBKLACbbLD/terms' target='_blank' >Terms and Conditions</a>
+    <a className="link link-hover" href='https://merchant.razorpay.com/policy/PkX8tBKLACbbLD/refund' target='_blank' >Cancellation and Refund</a>
+    <a className="link link-hover" href='https://merchant.razorpay.com/policy/PkX8tBKLACbbLD/shipping' target='_blank' >Shipping and Delivery</a>
+    <a className="link link-hover" href='https://merchant.razorpay.com/policy/PkX8tBKLACbbLD/privacy' target='_blank' >Privacy Policy</a>
+    <a className="link link-hover" href='https://merchant.razorpay.com/policy/PkX8tBKLACbbLD/contact_us' target='_blank' >Contact Us</a>
+  </nav>
+
         <nav>
           <h6 className="footer-title text-xl font-bold">Connect With Us</h6>
           <div className="grid grid-flow-col gap-4">
