@@ -8,8 +8,8 @@ import { Link } from "react-router-dom";
 
 const Login = () => {
   const [error, setError] = useState("");
-  const [emailId, setEmailId] = useState("aman@gmail.com");
-  const [password, setPassword] = useState("Aman@1234");
+  const [emailId, setEmailId] = useState("");
+  const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [isLoginForm, setIsLoginForm] = useState(true);
