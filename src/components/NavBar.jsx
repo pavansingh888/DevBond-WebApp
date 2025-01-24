@@ -56,22 +56,29 @@ const NavBar = () => {
               >
                 <li>
                   <Link to="/profile" className="flex items-center gap-2">
-                    <span class="material-symbols-outlined">person</span>{" "}
+                    <span className="material-symbols-outlined">person</span>{" "}
                     Profile
                   </Link>
                 </li>
+                
                 <li>
                   <Link to="/connections" className="flex items-center gap-2">
                     {" "}
-                    <span class="material-symbols-outlined">group</span>
+                    <span className="material-symbols-outlined">group</span>
                     Connections
                   </Link>
                 </li>
                 <li>
                   <Link to="/requests" className="flex items-center gap-2">
                     {" "}
-                    <span class="material-symbols-outlined">person_add</span>
+                    <span className="material-symbols-outlined">person_add</span>
                     Requests
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/premium" className="flex items-center gap-2">
+                    <span className="material-symbols-outlined">person</span>{" "}
+                    Premium
                   </Link>
                 </li>
                 <li>
@@ -79,7 +86,7 @@ const NavBar = () => {
                     onClick={handleLogout}
                     className="flex items-center gap-2 text-red-500 hover:bg-red-100"
                   >
-                    <span class="material-symbols-outlined">logout</span>Logout
+                    <span className="material-symbols-outlined">logout</span>Logout
                   </a>
                 </li>
               </ul>

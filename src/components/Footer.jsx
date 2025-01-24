@@ -3,7 +3,7 @@ import React from "react";
 const Footer = () => {
   return (
     <>
-      <footer className="footer p-10 bg-gradient-to-r from-blue-600 via-blue-500 to-blue-400 text-white">
+      <footer className="footer p-10 bg-gradient-to-r from-blue-600 via-blue-500 to-blue-400 text-white bottom-0">
         <div className="flex items-center space-x-4">
           <svg
             width="50"
