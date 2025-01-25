@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { BASE_URL } from "../utils/constants";
 import { useDispatch, useSelector } from "react-redux";
 import { addConnections } from "../utils/connectionsSlice";
+import { Link } from "react-router-dom";
 
 const Connections = () => {
   const dispatch = useDispatch();
@@ -27,7 +28,7 @@ const Connections = () => {
     if (!connections) {
       fetchConnections();
     }
-  }, []);
+  },[]);
 
   if (loading) {
     return (
@@ -76,9 +77,12 @@ const Connections = () => {
                 <p className="text-sm text-gray-700 mt-2">{about}</p>
               </div>
               <div className="flex gap-2 mt-4 ">
+                <Link to={`/chat/`+_id}>
                 <button className="btn btn-sm btn-success text-white ">
                   Message
                 </button>
+                </Link>
+                
                 <button className="btn btn-sm btn-error text-gray-100">
                   Remove
                 </button>
