@@ -2,38 +2,61 @@ import React, { useEffect, useState } from "react";
 import { createSocketConnection } from "../utils/socket";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import axios from "axios";
+import { BASE_URL } from "../utils/constants";
 
 const Chat = () => {
   const [messages, setMessages] = useState([
-    { id: 1, sender: "other", text: "Hi! How are you?" },
-    { id: 2, sender: "me", text: "I'm good, thanks! How about you?" },
-    { id: 3, sender: "other", text: "Doing great, thank you!" },
+    {
+      senderId: 1,
+      firstName: "other",
+      lastName: "other",
+      text: "Hi! How are you?",
+    },
+    {
+      senderId: 2,
+      firstName: "me",
+      lastName: "me",
+      text: "I'm good, thanks! How about you?",
+    },
+    {
+      senderId: 3,
+      firstName: "other",
+      lastName: "other",
+      text: "Doing great, thank you!",
+    },
   ]);
   const [newMessage, setNewMessage] = useState("");
 
-  const handleSendMessage = () => {
-    if (newMessage.trim()) {
-      //socket connection we have created inside useEffect, we cannot use it ouside, so we can create another socket connection
-      const socket = createSocketConnection();
+  //fetch message on component mount
+  const fetchChatMessages = async () => {
+    const chat = await axios.get(BASE_URL + "/chat/" + targetUserId, {
+      withCredentials: true,
+    });
 
-      socket.emit("sendMessage", {
-        firstName,
-        userId,
-        targetUserId,
-        text: newMessage,
-      });
-      setNewMessage("");
-      
-    }
+    console.log(chat.data.messages);
+
+    const chatMessages = chat?.data?.messages.map((msg) => {
+      const { senderId, text } = msg;
+      return {
+        senderId: senderId._id,
+        firstName: senderId?.firstName,
+        lastName: senderId?.lastName,
+        photoUrl: senderId?.photoUrl,
+        text,
+      };
+    });
+    setMessages(chatMessages);
   };
+
+  useEffect(() => {
+    fetchChatMessages();
+  }, []);
 
   const params = useParams();
   const targetUserId = params.targetUserId;
   const user = useSelector((store) => store.user);
   const userId = user?._id;
-  const firstName = user?.firstName;
-
-  const chatPerson = useSelector(store => store.connections.filter(connection => connection._id === targetUserId )[0]);
 
   useEffect(() => {
     //don’t create socket connection if userId is not there.
@@ -48,9 +71,12 @@ const Chat = () => {
     socket.emit("joinChat", { userId, targetUserId });
 
     //listen to “messageRecieved” event on the client i.e frontend
-    socket.on("messageRecieved", ({ firstName, text }) => {
+    socket.on("messageRecieved", ({ senderId, firstName, lastName, text }) => {
       console.log(firstName + " : " + text);
-      setMessages((messages)=>[...messages, { id:1, sender:firstName, text }]);
+      setMessages((messages) => [
+        ...messages,
+        { senderId, firstName, lastName, text },
+      ]);
     });
 
     {
@@ -63,16 +89,43 @@ const Chat = () => {
     };
   }, [userId, targetUserId]);
 
+  const chatPerson = useSelector(
+    (store) =>
+      store.connections.filter(
+        (connection) => connection._id === targetUserId
+      )[0]
+  );
+
+  const handleSendMessage = () => {
+    if (newMessage.trim()) {
+      //socket connection we have created inside useEffect, we cannot use it ouside, so we can create another socket connection
+      const socket = createSocketConnection();
+
+      socket.emit("sendMessage", {
+        firstName: user?.firstName,
+        lastName: user?.lastName,
+        photoUrl: user?.photoUrl,
+        userId,
+        targetUserId,
+        text: newMessage,
+      });
+      setNewMessage("");
+    }
+  };
+
   return (
     <div className="h-[80vh] bg-cyan-50 flex flex-col my-8 mx-auto  border-2 overflow-hidden rounded-lg w-11/12 md:w-1/2">
       {/* Chat Header */}
       <div className="bg-blue-600 text-white px-6 py-4 flex items-center shadow-md ">
-        <img
-          src={chatPerson.photoUrl}
-          alt="Profile"
-          className="w-10 h-10 rounded-full mr-4 border-2 border-cyan-400"
-        />
-        <h1 className="text-lg font-semibold">{chatPerson.firstName+" "+chatPerson.lastName}</h1>
+      <div className="chat-image avatar">
+        <div className="w-10 rounded-full mr-4 border-2 border-cyan-400">
+          <img src={chatPerson.photoUrl} alt="Profile" />
+        </div>
+        </div>
+
+        <h1 className="text-lg font-semibold">
+          {chatPerson.firstName + " " + chatPerson.lastName}
+        </h1>
       </div>
 
       {/* Chat Messages */}
@@ -81,28 +134,38 @@ const Chat = () => {
           <div
             // key={message.id}
             className={`chat  ${
-              message.sender === firstName ? "chat-end " : " chat-start"
+              message.senderId === userId ? "chat-end " : " chat-start"
             } my-4`}
           >
             {/* Avatar */}
             <div className="chat-image avatar">
-              <div className="w-10 rounded-full border-2 border-emerald-500">
+              <div className="w-8 rounded-full border-2 border-emerald-500">
                 <img
                   alt="Chat avatar"
-                  src={ message.sender === firstName ? user.photoUrl : chatPerson.photoUrl}
+                  src={
+                    message.senderId === userId
+                      ? user.photoUrl
+                      : chatPerson.photoUrl
+                  }
                 />
               </div>
             </div>
 
-            <div className="chat-header">
-              { message.sender }
-              <time className="text-xs opacity-50"> 12:45</time>
-            </div>
+            {message.senderId !== userId ? (
+              <div className="chat-header">
+                {`${message.firstName} ${message.lastName}`}
+                <time className="text-xs opacity-50"> 12:45</time>
+              </div>
+            ) : (
+              <div className="chat-header">
+                <time className="text-xs opacity-50"> 12:45</time>
+              </div>
+            )}
 
             {/* Chat Bubble */}
             <div
               className={`chat-bubble px-4 py-2 rounded-lg shadow-md ${
-                message.sender === firstName
+                message.senderId === userId
                   ? "bg-emerald-500 text-white"
                   : "bg-blue-100 text-blue-900"
               }`}
@@ -110,7 +173,7 @@ const Chat = () => {
               {message.text}
             </div>
 
-            <div className="chat-footer opacity-50">Delivered</div>
+            {/* <div className="chat-footer opacity-50">Delivered</div> */}
           </div>
         ))}
       </div>
