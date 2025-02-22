@@ -4,11 +4,12 @@ import { BASE_URL } from '../utils/constants';
 import { useDispatch, useSelector } from 'react-redux';
 import { addFeed } from '../utils/feedSlice';
 import UserCard from './UserCard';
+import { useNavigate } from 'react-router-dom';
 
 const Feed = () => {
   const feed = useSelector((store) => store.feed);
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
   const getFeed = async () => {
     if (feed) return; 
     try {
@@ -25,11 +26,7 @@ const Feed = () => {
 
   // if no feed data is available - display loading message or prompt to log in
   if (!feed) {
-    return (
-      <div className="min-h-screen flex justify-center items-center ">
-        <h1 className="text-lg font-semibold text-gray-600">Login to get started</h1>
-      </div>
-    );
+    return navigate("/login");
   }
 
   // if no users are found in the feed - display a message

@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 const Connections = () => {
   const dispatch = useDispatch();
   const connections = useSelector((store) => store.connections);
+  const isPremium = useSelector((store)=> store.user.isPremium)
   const [loading, setLoading] = useState(false);
 
   const fetchConnections = async () => {
@@ -77,9 +78,9 @@ const Connections = () => {
                 <p className="text-sm text-gray-700 mt-2">{about}</p>
               </div>
               <div className="flex gap-2 mt-4 ">
-                <Link to={`/chat/`+_id}>
-                <button className="btn btn-sm btn-success text-white ">
-                  Message
+                <Link to={isPremium ? `/chat/`+_id : `/premium`}>
+                <button className="btn btn-sm btn-success text-white" >
+                  {isPremium ? "Message" : "Chat with Premium"}
                 </button>
                 </Link>
                 
