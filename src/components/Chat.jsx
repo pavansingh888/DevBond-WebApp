@@ -48,6 +48,9 @@ const Chat = () => {
     }
   };
   
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   useEffect(() => {
     fetchChatMessages();
@@ -211,17 +214,7 @@ const Chat = () => {
       <div className="flex-grow overflow-y-auto px-4 py-6 bg-cyan-50">
         {[...Array(5)].map((_, index) => (
           <div key={index} className={`chat my-4 ${index % 2 === 0 ? "chat-start" : "chat-end"} animate-pulse`}>
-            {/* Avatar Shimmer */}
-            <div className="chat-image avatar">
-              <div className="w-8 h-8 rounded-full bg-gray-300"></div>
-            </div>
-
-            {/* Chat Bubble Shimmer */}
-            <div
-              className={`chat-bubble px-4 py-3 rounded-lg shadow-md ${
-                index % 2 === 0 ? "bg-blue-200" : "bg-emerald-300"
-              } w-40 h-6`}
-            ></div>
+            
           </div>
         ))}
       </div>

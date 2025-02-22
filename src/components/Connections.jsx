@@ -26,6 +26,10 @@ const Connections = () => {
   };
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+  
+  useEffect(() => {
     if (!connections) {
       fetchConnections();
     }

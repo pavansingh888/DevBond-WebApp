@@ -2,12 +2,16 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { BASE_URL } from "../utils/constants";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { updateIsPremium } from "../utils/userSlice";
 
 const Premium = () => {
-  const [isUserPremium, setIsUserPremium] = useState(false);
+  const isUserPremium = useSelector(store => store.user.isPremium);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   useEffect(() => {
-    verifyPremiumUser();
+    window.scrollTo(0, 0);
   }, []);
 
   const verifyPremiumUser = async () => {
@@ -18,7 +22,7 @@ const Premium = () => {
     console.log(res.data.isPremium);
     
     if (res.data.isPremium) {
-      setIsUserPremium(true);
+      dispatch(updateIsPremium(res.data.isPremium));
     }
   };
 
@@ -54,7 +58,7 @@ const Premium = () => {
     //It should open up dialog box of razorpay
     const rzp = new window.Razorpay(options); //this Razorpay will come from the script that we've added, we need to write window. here in react code to access it, since RZP object will be attached to the window object
     //options are required to open checkout dialog box
-    rzp.open(); //point where dialog bax is opened
+    rzp.open(); //point where dialog box is opened
   }
 
 
