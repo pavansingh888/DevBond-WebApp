@@ -1,9 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { createSocketConnection } from "../utils/socket";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL } from "../utils/constants";
+import { removeUser } from "../utils/userSlice";
+import { removeFeed } from "../utils/feedSlice";
+import { removeAllRequests } from "../utils/requestsSlice";
+import { removeConnections } from "../utils/connectionsSlice";
 
 const Chat = () => {
   
@@ -28,13 +32,15 @@ const Chat = () => {
       });
 
       const chatMessages = response?.data?.messages.map((msg) => {
-        const { senderId, text } = msg;
+        const { senderId, text, createdAt, updatedAt } = msg;
         return {
           senderId: senderId?._id,
           firstName: senderId?.firstName,
           lastName: senderId?.lastName,
           photoUrl: senderId?.photoUrl,
           text,
+          createdAt,
+          updatedAt,
         };
       });
       setMessages(chatMessages);
@@ -42,7 +48,13 @@ const Chat = () => {
     } catch (error) {
       if (error.response && error.response.status === 403) {
         navigate('/premium'); //redirect to the premium page
-      } else {
+      } else if(error.response && error.response.status === 401){
+        dispatch(removeUser());
+        dispatch(removeFeed());
+        dispatch(removeAllRequests());
+        dispatch(removeConnections());
+        navigate('/login')
+      }else{
         console.error("Error fetching chat messages:", error);
       }
     }
@@ -74,11 +86,12 @@ const Chat = () => {
     socket.emit("joinChat", { userId, targetUserId });
 
     //listen to “messageRecieved” event on the client i.e frontend
-    socket.on("messageRecieved", ({ senderId, firstName, lastName, text }) => {
+    socket.on("messageRecieved", ({ senderId, firstName, lastName, text, createdAt }) => {
       console.log(firstName + " : " + text);
+      createdAt = formatTime(createdAt);
       setMessages((messages) => [
         ...messages,
-        { senderId, firstName, lastName, text },
+        { senderId, firstName, lastName, text, createdAt },
       ]);
     });
 
@@ -92,6 +105,16 @@ const Chat = () => {
     };
   }, [userId, targetUserId]);
 
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    if (containerRef.current) {
+      containerRef.current.scrollTo({
+        top: containerRef.current.scrollHeight,
+      });
+    }
+  }, [messages]);
+
   const chatPerson = useSelector(
     (store) =>
       store.connections.filter(
@@ -101,7 +124,7 @@ const Chat = () => {
 
   const handleSendMessage = () => {
     if (newMessage.trim()) {
-      //socket connection we have created inside useEffect, we cannot use it ouside, so we can create another socket connection
+      //socket connection we have created inside useEffect, we cannot use it outside, so we can create another socket connection
       const socket = createSocketConnection();
 
       socket.emit("sendMessage", {
@@ -111,12 +134,29 @@ const Chat = () => {
         userId,
         targetUserId,
         text: newMessage,
+        createdAt: new Date().toISOString(),
       });
       setNewMessage("");
     }
   };
 
+  const formatTime = (utcDate) => {
+    const date = new Date(utcDate);
+    return date.toLocaleString("en-IN", {
+      timeZone: "Asia/Kolkata",
+      // weekday: "short",  
+      day: "2-digit",  
+      month: "short",   
+      // year: "numeric",   
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,   
+    });
+  };
+
+
   
+
 
   return messages ? (
     <div className="h-[80vh] bg-cyan-50 flex flex-col my-8 mx-auto  border-2 overflow-hidden rounded-lg w-11/12 md:w-1/2">
@@ -134,10 +174,13 @@ const Chat = () => {
       </div>
 
       {/* Chat Messages */}
-      <div className="flex-grow overflow-y-auto px-4 py-6 bg-cyan-50">
-        {messages.map((message) => (
+      <div 
+      className="flex-grow overflow-y-auto px-4 py-6 bg-cyan-50"
+      ref={containerRef}
+      >
+        {messages.map((message, index, messages) => (
           <div
-            // key={message.id}
+            key={index}
             className={`chat  ${
               message.senderId === userId ? "chat-end " : " chat-start"
             } my-4`}
@@ -159,11 +202,11 @@ const Chat = () => {
             {message.senderId !== userId ? (
               <div className="chat-header">
                 {`${message.firstName} ${message.lastName}`}
-                <time className="text-xs opacity-50"> 12:45</time>
+                <time className="text-xs opacity-50"> {formatTime(message.createdAt)} </time>
               </div>
             ) : (
               <div className="chat-header">
-                <time className="text-xs opacity-50"> 12:45</time>
+                <time className="text-xs opacity-50"> {formatTime(message.createdAt)} </time>
               </div>
             )}
 
@@ -189,6 +232,11 @@ const Chat = () => {
           type="text"
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && newMessage.trim()) {
+              handleSendMessage();
+            }
+          }}
           placeholder="Type a message..."
           className="w-full px-4 py-3 rounded-md bg-cyan-50 text-blue-900 placeholder-blue-600 focus:outline-none focus:ring-2 focus:ring-cyan-400 mr-4"
         />

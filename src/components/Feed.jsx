@@ -10,6 +10,7 @@ const Feed = () => {
   const feed = useSelector((store) => store.feed);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const getFeed = async () => {
     if (feed) return; 
     try {
@@ -24,13 +25,14 @@ const Feed = () => {
     getFeed();
   }, []); 
 
+
   // if no feed data is available - display loading message or prompt to log in
   if (!feed) {
     return navigate("/login");
   }
 
   // if no users are found in the feed - display a message
-  if (feed.length === 0) {
+  if (feed?.length === 0) {
     return (
       <div className="min-h-screen flex justify-center items-center">
         <h1 className="text-lg font-semibold text-gray-600">No new users found!</h1>
