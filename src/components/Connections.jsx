@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { BASE_URL } from "../utils/constants";
 import { useDispatch, useSelector } from "react-redux";
-import { addConnections } from "../utils/connectionsSlice";
+import { addConnections, removeConnection } from "../utils/connectionsSlice";
 import { Link } from "react-router-dom";
 
 const Connections = () => {
@@ -24,15 +24,24 @@ const Connections = () => {
       setLoading(false);
     }
   };
+  const handleRemoveConnection = async (connectionId) => {
+    try {
+      const res = await axios.delete(BASE_URL + "/user/connections/remove/" + connectionId, {
+        withCredentials: true,
+      });
+      
+      if(res.status === 200) dispatch(removeConnection(connectionId));
+    } catch (error) {
+      console.error(error);
+    } 
+  };
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
   
   useEffect(() => {
-    if (!connections) {
       fetchConnections();
-    }
   },[]);
 
   if (loading) {
@@ -88,7 +97,7 @@ const Connections = () => {
                 </button>
                 </Link>
                 
-                <button className="btn btn-sm btn-error text-gray-100">
+                <button className="btn btn-sm btn-error text-gray-100" onClick={()=>handleRemoveConnection(_id)}>
                   Remove
                 </button>
               </div>
