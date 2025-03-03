@@ -96,7 +96,7 @@ const EditProfile = ({ user, showProfile, handleShowProfile }) => {
 
   return (
     <>
-  <div className="container mx-auto py-8 text-gray-700">
+  <div className="container mx-auto py-8 text-gray-700 bg-slate-200">
     <div className="flex flex-wrap justify-center gap-8">
       {showProfile && (
         <UserCard user={{ firstName, lastName, about, age, gender, photoUrl }} />

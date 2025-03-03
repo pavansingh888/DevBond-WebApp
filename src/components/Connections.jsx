@@ -4,11 +4,12 @@ import { BASE_URL } from "../utils/constants";
 import { useDispatch, useSelector } from "react-redux";
 import { addConnections, removeConnection } from "../utils/connectionsSlice";
 import { Link } from "react-router-dom";
+import Loader from "./Loader";
 
 const Connections = () => {
   const dispatch = useDispatch();
   const connections = useSelector((store) => store.connections);
-  const isPremium = useSelector((store)=> store.user.isPremium)
+  const isPremium = useSelector((store)=> store?.user?.isPremium)
   const [loading, setLoading] = useState(false);
 
   const fetchConnections = async () => {
@@ -46,26 +47,24 @@ const Connections = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex justify-center items-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-primary border-solid"></div>
-      </div>
+      <Loader/>
     );
   }
 
   if (!connections) {
-    return <div className="min-h-screen "></div>;
+    return <div className="min-h-screen bg-slate-200"></div>;
   }
 
   if (connections.length === 0) {
     return (
-      <div className="min-h-screen flex justify-center items-center font-semibold mt-10 text-lg">
+      <div className="min-h-screen flex justify-center items-center font-semibold mt-10 text-lg bg-slate-200 text-gray-800">
         <h1>No connections found!</h1>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col items-center justify-start min-h-screen bg-white">
+    <div className="flex flex-col items-center justify-start min-h-screen bg-slate-200">
       <h1 className="font-bold text-black text-3xl my-10">Connections</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 px-4 w-full">
         {connections.map((connection) => {
@@ -73,7 +72,7 @@ const Connections = () => {
             connection;
           return (
             <div
-              className="card bg-slate-200 text-black shadow-md hover:shadow-lg rounded-lg p-4 flex flex-col items-center justify-around" 
+              className="card bg-white text-black shadow-md hover:shadow-lg rounded-lg p-4 flex flex-col items-center justify-around" 
               key={_id}
             >
               <div className="w-20 h-20 rounded-full overflow-hidden bg-gray-300">

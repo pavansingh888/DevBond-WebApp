@@ -1,21 +1,29 @@
-import { createSlice } from "@reduxjs/toolkit";
-
+import { createSlice } from '@reduxjs/toolkit';
 
 const feedSlice = createSlice({
-    name:'feed',
-    initialState: null,
-    reducers:{
-        addFeed: (state,action) => action.payload,
-        removeUserFromFeed: (state,action) => {
-            const newFeed = state.filter((user) => user._id !== action.payload);
-            return newFeed;
-          },
-        removeFeed: () => {
-            return null;
-          },
-
+  name: 'feed',
+  initialState: {
+    users: null,
+    currentPage: 1,
+    hasMore: true,  // To track if there are more users to fetch
+  },
+  reducers: {
+    addFeed: (state, action) => {
+      if (action.payload.page === 1) {
+        state.users = action.payload.data;  // Replace feed on first page
+      } else {
+        state.users = [...state.users, ...action.payload.data];  // Append on next pages
+      }
+      state.currentPage = action.payload.page;
+      state.hasMore = action.payload.data.length > 0; // No more users if data array is empty
+    },
+    resetFeed: (state) => {
+      state.users = [];
+      state.currentPage = 1;
+      state.hasMore = true;
     }
-})
+  }
+});
 
-export const {addFeed,removeUserFromFeed,removeFeed} = feedSlice.actions;
+export const { addFeed, resetFeed } = feedSlice.actions;
 export default feedSlice.reducer;

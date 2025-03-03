@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { BASE_URL } from "../utils/constants";
 import { removeUser } from "../utils/userSlice";
 import axios from "axios";
-import { removeFeed } from "../utils/feedSlice";
+// import { removeFeed } from "../utils/feedSlice";
 import { removeAllRequests } from "../utils/requestsSlice";
 import { removeConnections } from "../utils/connectionsSlice";
 
@@ -17,7 +17,7 @@ const NavBar = () => {
     try {
       await axios.post(BASE_URL + "/logout", {}, { withCredentials: true });
       dispatch(removeUser());
-      dispatch(removeFeed());
+      // dispatch(removeFeed());
       dispatch(removeAllRequests());
       dispatch(removeConnections());
 
@@ -61,12 +61,18 @@ const NavBar = () => {
                 className="menu menu-sm dropdown-content bg-white text-black rounded-box mt-3 w-52 p-2 shadow-lg"
               >
                 <li>
+                  <Link to="/" className="flex items-center gap-2">
+                    <span class="material-symbols-outlined">dynamic_feed</span>{" "}
+                    Explore Bonds
+                  </Link>
+                </li>
+                <li>
                   <Link to="/profile" className="flex items-center gap-2">
                     <span className="material-symbols-outlined">person</span>{" "}
                     Profile
                   </Link>
                 </li>
-                
+
                 <li>
                   <Link to="/connections" className="flex items-center gap-2">
                     {" "}
@@ -77,13 +83,17 @@ const NavBar = () => {
                 <li>
                   <Link to="/requests" className="flex items-center gap-2">
                     {" "}
-                    <span className="material-symbols-outlined">person_add</span>
+                    <span className="material-symbols-outlined">
+                      person_add
+                    </span>
                     Requests
                   </Link>
                 </li>
                 <li>
                   <Link to="/premium" className="flex items-center gap-2">
-                    <span className="material-symbols-outlined">person</span>{" "}
+                    <span class="material-symbols-outlined">
+                      workspace_premium
+                    </span>{" "}
                     Premium
                   </Link>
                 </li>
@@ -92,7 +102,8 @@ const NavBar = () => {
                     onClick={handleLogout}
                     className="flex items-center gap-2 text-red-500 hover:bg-red-100"
                   >
-                    <span className="material-symbols-outlined">logout</span>Logout
+                    <span className="material-symbols-outlined">logout</span>
+                    Logout
                   </a>
                 </li>
               </ul>

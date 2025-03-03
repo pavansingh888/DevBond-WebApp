@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateIsPremium } from "../utils/userSlice";
 
 const Premium = () => {
-  const isUserPremium = useSelector(store => store.user.isPremium);
+  const isUserPremium = useSelector(store => store?.user?.isPremium);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -63,7 +63,7 @@ const Premium = () => {
 
 
   return isUserPremium ? 
-  (<div className="min-h-screen bg-gradient-to-r from-gray-600 to-gray-300 text-white flex flex-col items-center px-6 py-10">
+  (<div className="min-h-screen bg-gradient-to-r from-blue-600 to-yellow-400 text-white flex flex-col items-center px-6 py-10">
     <h1 className="text-4xl font-bold mb-4">Welcome, Premium User!</h1>
     <p className="text-lg text-center mb-6 max-w-3xl">
       Thank you for subscribing to our premium membership. You now have access to exclusive features like chatting eligibility, a verified blue tick, and more!
@@ -77,7 +77,7 @@ const Premium = () => {
       <p className="text-2xl font-semibold mb-6">Explore Your Premium Benefits</p>
       <button
         onClick={() => navigate("/connections")}
-        className="btn btn-primary text-lg px-8  rounded-lg shadow-md hover:bg-primary-focus transition duration-300"
+        className="btn btn-primary text-lg px-8  rounded-lg shadow-md hover:bg-green-500 transition duration-300 bg-green-400"
       >
         Go to Connections
       </button>
@@ -89,7 +89,7 @@ const Premium = () => {
     />
   </div>)
   : 
-  (<div className="min-h-screen bg-gradient-to-r from-gray-900 to-gray-500 text-white flex flex-col items-center px-6 py-10">
+  (<div className="min-h-screen bg-gradient-to-r from-gray-700 to-gray-300 text-white flex flex-col items-center px-6 py-10">
       <h1 className="text-4xl font-bold mb-4">Go Premium</h1>
       <p className="text-lg text-center mb-6 max-w-3xl">
         Upgrade to our Premium Membership and unlock exclusive features:

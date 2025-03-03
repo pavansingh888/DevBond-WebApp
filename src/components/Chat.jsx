@@ -5,7 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL } from "../utils/constants";
 import { removeUser } from "../utils/userSlice";
-import { removeFeed } from "../utils/feedSlice";
+// import { removeFeed } from "../utils/feedSlice";
 import { removeAllRequests } from "../utils/requestsSlice";
 import { removeConnections } from "../utils/connectionsSlice";
 
@@ -50,7 +50,7 @@ const Chat = () => {
         navigate('/premium'); //redirect to the premium page
       } else if(error.response && error.response.status === 401){
         dispatch(removeUser());
-        dispatch(removeFeed());
+        // dispatch(removeFeed());
         dispatch(removeAllRequests());
         dispatch(removeConnections());
         navigate('/login')
@@ -158,7 +158,8 @@ const Chat = () => {
   
 
 
-  return messages ? (
+  return (<div className="bg-slate-200 py-8">
+      {messages ? (
     <div className="h-[80vh] bg-cyan-50 flex flex-col my-8 mx-auto  border-2 overflow-hidden rounded-lg w-11/12 md:w-1/2">
       {/* Chat Header */}
       <div className="bg-blue-600 text-white px-6 py-4 flex items-center shadow-md ">
@@ -273,7 +274,8 @@ const Chat = () => {
         <div className="w-20 h-10 bg-gray-400 rounded-lg"></div>
       </div>
     </div>
-  );
-};
+  )};
+  </div>)
+}
 
 export default Chat;

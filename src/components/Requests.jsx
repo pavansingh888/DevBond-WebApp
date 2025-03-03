@@ -3,6 +3,7 @@ import { BASE_URL } from "../utils/constants";
 import { useDispatch, useSelector } from "react-redux";
 import { addRequests, removeRequest } from "../utils/requestsSlice";
 import axios from "axios";
+import Loader from "./Loader";
 
 const Requests = () => {
   const dispatch = useDispatch();
@@ -41,19 +42,19 @@ const Requests = () => {
   }, []);
 
   if (!requests) {
-    return <div className="min-h-screen flex justify-center items-center">Loading...</div>;
+    return <Loader/>;
   }
 
   if (requests.length === 0) {
     return (
-      <div className="min-h-screen flex flex-col justify-center items-center">
-        <h1 className="text-lg font-medium text-gray-600">No new connection requests found!</h1>
+      <div className="min-h-screen flex flex-col justify-center items-center bg-slate-200">
+        <h1 className="text-lg font-medium text-gray-800">No new connection requests found!</h1>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col items-center py-10 min-h-screen px-4 bg-white">
+    <div className="flex flex-col items-center py-10 min-h-screen px-4 bg-slate-200">
       <h1 className="font-bold text-black text-3xl mb-6 text-center">Connection Requests</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-6xl">
         {requests.map((request) => {
@@ -62,7 +63,7 @@ const Requests = () => {
           return (
             <div
               key={_id}
-              className="shadow-md rounded-lg p-4 flex flex-col items-center text-center bg-slate-200 text-black"
+              className="shadow-md rounded-lg p-4 flex flex-col items-center text-center bg-white text-black"
             >
               <div className="w-24 h-24 rounded-full overflow-hidden bg-gray-300">
                 <img
