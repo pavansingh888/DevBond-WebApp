@@ -28,6 +28,8 @@ const Login = () => {
         { emailId, password },
         { withCredentials: true }
       );
+      console.log(res);
+      
       dispatch(addUser(res.data.data));
       navigate("/");
     } catch (error) {

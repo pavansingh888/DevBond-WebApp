@@ -42,7 +42,7 @@ const Connections = () => {
   }, []);
   
   useEffect(() => {
-      fetchConnections();
+    if(!connections) fetchConnections();
   },[]);
 
   if (loading) {

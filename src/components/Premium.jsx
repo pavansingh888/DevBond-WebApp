@@ -4,11 +4,13 @@ import { BASE_URL } from "../utils/constants";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { updateIsPremium } from "../utils/userSlice";
+import Loader from "./Loader";
 
 const Premium = () => {
   const isUserPremium = useSelector(store => store?.user?.isPremium);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -61,6 +63,12 @@ const Premium = () => {
     rzp.open(); //point where dialog box is opened
   }
 
+
+  // if (loading) {
+  //   return (
+  //     <Loader/>
+  //   );
+  // }
 
   return isUserPremium ? 
   (<div className="min-h-screen bg-gradient-to-r from-blue-600 to-yellow-400 text-white flex flex-col items-center px-6 py-10">
