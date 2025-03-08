@@ -21,9 +21,14 @@ const feedSlice = createSlice({
       state.users = [];
       state.currentPage = 1;
       state.hasMore = true;
+    },
+    removeFeed: (state) => {
+      state.users = null;
+      state.currentPage = 1;
+      state.hasMore = true;
     }
   }
 });
 
-export const { addFeed, resetFeed } = feedSlice.actions;
+export const { addFeed, resetFeed, removeFeed } = feedSlice.actions;
 export default feedSlice.reducer;

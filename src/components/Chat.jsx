@@ -5,7 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL } from "../utils/constants";
 import { removeUser } from "../utils/userSlice";
-// import { removeFeed } from "../utils/feedSlice";
+import { removeFeed } from "../utils/feedSlice";
 import { removeAllRequests } from "../utils/requestsSlice";
 import { removeConnections } from "../utils/connectionsSlice";
 
@@ -50,7 +50,7 @@ const Chat = () => {
         navigate('/premium'); //redirect to the premium page
       } else if(error.response && error.response.status === 401){
         dispatch(removeUser());
-        // dispatch(removeFeed());
+        dispatch(removeFeed());
         dispatch(removeAllRequests());
         dispatch(removeConnections());
         navigate('/login')

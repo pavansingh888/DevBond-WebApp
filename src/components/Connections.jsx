@@ -57,7 +57,7 @@ const Connections = () => {
 
   if (connections.length === 0) {
     return (
-      <div className="min-h-screen flex justify-center items-center font-semibold mt-10 text-lg bg-slate-200 text-gray-800">
+      <div className="min-h-screen flex justify-center items-center font-semibold text-lg bg-slate-200 text-gray-800 ">
         <h1>No connections found!</h1>
       </div>
     );

@@ -28,7 +28,7 @@ const Login = () => {
         { emailId, password },
         { withCredentials: true }
       );
-      dispatch(addUser(res.data));
+      dispatch(addUser(res.data.data));
       navigate("/");
     } catch (error) {
       setError(error.response?.data || "Login failed");

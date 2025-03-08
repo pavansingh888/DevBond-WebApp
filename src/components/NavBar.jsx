@@ -7,7 +7,7 @@ import axios from "axios";
 // import { removeFeed } from "../utils/feedSlice";
 import { removeAllRequests } from "../utils/requestsSlice";
 import { removeConnections } from "../utils/connectionsSlice";
-
+import {removeFeed} from '../utils/feedSlice'
 const NavBar = () => {
   const user = useSelector((store) => store.user);
   const dispatch = useDispatch();
@@ -17,7 +17,7 @@ const NavBar = () => {
     try {
       await axios.post(BASE_URL + "/logout", {}, { withCredentials: true });
       dispatch(removeUser());
-      // dispatch(removeFeed());
+      dispatch(removeFeed());
       dispatch(removeAllRequests());
       dispatch(removeConnections());
 
@@ -62,7 +62,7 @@ const NavBar = () => {
               >
                 <li>
                   <Link to="/" className="flex items-center gap-2">
-                    <span class="material-symbols-outlined">dynamic_feed</span>{" "}
+                    <span className="material-symbols-outlined">dynamic_feed</span>{" "}
                     Explore Bonds
                   </Link>
                 </li>
@@ -91,7 +91,7 @@ const NavBar = () => {
                 </li>
                 <li>
                   <Link to="/premium" className="flex items-center gap-2">
-                    <span class="material-symbols-outlined">
+                    <span className="material-symbols-outlined">
                       workspace_premium
                     </span>{" "}
                     Premium
