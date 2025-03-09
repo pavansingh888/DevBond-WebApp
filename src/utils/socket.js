@@ -6,10 +6,13 @@ export const createSocketConnection = () => {
     //this io fn is called using a URL, we give it a URL where we need to connect ie backend URL
     //this config will work on our local system but on our production, it will need some configuration for production.
   if(location.hostname === "localhost"){
-        return io(BASE_URL);
+        return io(BASE_URL,{
+          withCredentials: true, //Including cookies in the handshake
+        });
   } else{
     return io("/", {
       path:"/api/socket.io",
+      withCredentials: true, //Including cookies in the handshake
     })
     // return io("/api", {
     //   path:"/api/socket.io",

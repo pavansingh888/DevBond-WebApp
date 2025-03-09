@@ -24,6 +24,7 @@ const Body = () => {
     } catch (error) {
       if(error.status===401 || error.status===400){
          navigate("/login")
+         setLoading(false)
       }
       console.error(error);
     }
