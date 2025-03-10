@@ -9,6 +9,7 @@ import Feed from "./components/Feed";
 import Requests from "./components/Requests";
 import Premium from "./components/Premium";
 import Chat from "./components/Chat";
+import ErrorPage from "./components/ErrorPage";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
             <Route path="/profile" element={<Profile />}></Route>
             <Route path="/connections" element={<Connections />}></Route>
             <Route path="/requests" element={<Requests/>}></Route>
+            <Route path="/error" element={<ErrorPage/>}></Route>
           </Route>
         </Routes>
       </BrowserRouter>

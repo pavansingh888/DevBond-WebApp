@@ -20,7 +20,13 @@ const Connections = () => {
       });
       dispatch(addConnections(res?.data?.data));
     } catch (error) {
-      console.error(error);
+      // console.error(error);
+      navigate("/error", {
+        state: {
+          message: error?.message || "An unexpected error occurred",
+          note: "Error fetching User connections."
+        }
+      })
     } finally {
       setLoading(false);
     }
@@ -33,7 +39,13 @@ const Connections = () => {
       
       if(res.status === 200) dispatch(removeConnection(connectionId));
     } catch (error) {
-      console.error(error);
+      // console.error(error);
+      navigate("/error", {
+        state: {
+          message: error?.message || "An unexpected error occurred",
+          note: "Error removing connection."
+        }
+      })
     } 
   };
 

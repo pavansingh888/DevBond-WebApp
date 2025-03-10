@@ -10,22 +10,31 @@ const Premium = () => {
   const isUserPremium = useSelector(store => store?.user?.isPremium);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [loading, setLoading] = useState(true);
+  // const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
   const verifyPremiumUser = async () => {
-    const res = await axios.get(BASE_URL + "/premium/verify", {
+    try {
+      const res = await axios.get(BASE_URL + "/premium/verify", {
       withCredentials: true,
     });
-
-    console.log(res.data.isPremium);
-    
+    // console.log(res.data.isPremium);
     if (res.data.isPremium) {
       dispatch(updateIsPremium(res.data.isPremium));
     }
+
+    } catch (error) {
+      navigate("/error", {
+        state: {
+          message: error?.message || "An unexpected error occurred",
+          note: "Error verifying premium membership details."
+        }
+      })
+    }
+    
   };
 
   const handleBuyClick = async (type) => {

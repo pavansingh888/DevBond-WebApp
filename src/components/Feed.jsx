@@ -22,7 +22,13 @@ const Feed = () => {
       });
       dispatch(addFeed({ data: res.data.data, page }));
     } catch (error) {
-      console.error("ERROR fetching feed: " + error);
+      // console.error("ERROR fetching feed: " + error);
+      navigate("/error", {
+        state: {
+          message: error?.message || "An unexpected error occurred",
+          note: "Error fetching feed."
+        }
+      })
     } finally {
       setIsLoading(false); //marking loading as complete regardless of success or failure
     }
@@ -42,7 +48,6 @@ const Feed = () => {
   //naviagting after loading is false
   useEffect(() => {
     if (!isLoading && !users) {
-      console.log("yes");
       return navigate("/login");
     }
   }, [isLoading, users, navigate]);

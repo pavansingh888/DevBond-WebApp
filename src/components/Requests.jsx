@@ -16,7 +16,13 @@ const Requests = () => {
       });
       dispatch(addRequests(res?.data?.data));
     } catch (error) {
-      console.error(error);
+      // console.error(error);
+      navigate("/error", {
+        state: {
+          message: error?.message || "An unexpected error occurred",
+          note: "Error fetching recieved requests."
+        }
+      })
     }
   };
 
@@ -29,7 +35,13 @@ const Requests = () => {
       );
       dispatch(removeRequest(_id));
     } catch (error) {
-      console.error(error);
+      // console.error(error);
+      navigate("/error", {
+        state: {
+          message: error?.message || "An unexpected error occurred",
+          note: `Error ${status==="accepted" ? "accepting" : "rejecting"} the request.`
+        }
+      })
     }
   };
 

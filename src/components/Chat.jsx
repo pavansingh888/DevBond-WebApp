@@ -57,7 +57,13 @@ const Chat = () => {
         dispatch(removeConnections());
         navigate("/login");
       } else {
-        console.error("Error fetching chat messages:", error);
+        // console.error("Error fetching chat messages:", error);
+        navigate("/error", {
+          state: {
+            message: error?.message || "An unexpected error occurred",
+            note: "Error fetching chat messages."
+          }
+        })
       }
     }
   };
@@ -86,7 +92,7 @@ const Chat = () => {
     socket.on(
       "messageRecieved",
       ({ senderId, firstName, lastName, text, createdAt }) => {
-        console.log(firstName + " : " + text);
+        // console.log(firstName + " : " + text);
         createdAt = formatTime(createdAt);
         setMessages((messages) => [
           ...messages,
@@ -123,7 +129,13 @@ const Chat = () => {
       });
       dispatch(addConnections(res?.data?.data));
     } catch (error) {
-      console.error(error);
+      // console.error(error);
+      navigate("/error", {
+        state: {
+          message: error?.message || "An unexpected error occurred",
+          note: "Error getting connection details."
+        }
+      })
     } finally {
       setLoading(false);
     }

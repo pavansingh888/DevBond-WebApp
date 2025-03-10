@@ -25,8 +25,16 @@ const Body = () => {
       if(error.status===401 || error.status===400){
          navigate("/login")
          setLoading(false)
+      }else{
+        // console.error(error);
+      navigate("/error", {
+        state: {
+          message: error?.message || "An unexpected error occurred",
+          note: "Error getting profile details."
+        }
+      })
+      setLoading(false);
       }
-      console.error(error);
     }
   };
 
