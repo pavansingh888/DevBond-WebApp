@@ -3,14 +3,17 @@ import axios from "axios";
 import { BASE_URL } from "../utils/constants";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { updateIsPremium } from "../utils/userSlice";
+import { removeUser, updateIsPremium } from "../utils/userSlice";
 import Loader from "./Loader";
+import { removeFeed } from "../utils/feedSlice";
+import { removeAllRequests } from "../utils/requestsSlice";
+import { removeConnections } from "../utils/connectionsSlice";
 
 const Premium = () => {
   const isUserPremium = useSelector(store => store?.user?.isPremium);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  // const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -18,6 +21,7 @@ const Premium = () => {
 
   const verifyPremiumUser = async () => {
     try {
+      setLoading(true);
       const res = await axios.get(BASE_URL + "/premium/verify", {
       withCredentials: true,
     });
@@ -25,8 +29,14 @@ const Premium = () => {
     if (res.data.isPremium) {
       dispatch(updateIsPremium(res.data.isPremium));
     }
-
     } catch (error) {
+      if (error.status === 401) {
+        navigate("/login");
+        dispatch(removeUser());
+        dispatch(removeFeed());
+        dispatch(removeAllRequests());
+        dispatch(removeConnections());
+      } else {
       navigate("/error", {
         state: {
           message: error?.message || "An unexpected error occurred",
@@ -34,11 +44,15 @@ const Premium = () => {
         }
       })
     }
-    
+    }finally{
+      setLoading(false);
+    }
   };
 
   const handleBuyClick = async (type) => {
-    const order = await axios.post(
+    try {
+      setLoading(true);
+      const order = await axios.post(
       BASE_URL + "/payment/create",
       {
         membershipType: type,
@@ -65,19 +79,40 @@ const Premium = () => {
       },
       handler: verifyPremiumUser,
     };
-    
+    setLoading(false);
     //It should open up dialog box of razorpay
     const rzp = new window.Razorpay(options); //this Razorpay will come from the script that we've added, we need to write window. here in react code to access it, since RZP object will be attached to the window object
     //options are required to open checkout dialog box
     rzp.open(); //point where dialog box is opened
+
+
+    } catch (error) {
+      
+      if(error.status===401){
+        navigate("/login")
+        dispatch(removeUser());
+        dispatch(removeFeed());
+        dispatch(removeAllRequests());
+        dispatch(removeConnections());
+     }else{
+      navigate("/error", {
+        state: {
+          message: error?.message || "An unexpected error occurred",
+          note: "Error creating order for payment."
+        }
+      })
+    }
+    
+    }
+    
   }
 
 
-  // if (loading) {
-  //   return (
-  //     <Loader/>
-  //   );
-  // }
+  if (loading) {
+    return (
+      <Loader/>
+    );
+  }
 
   return isUserPremium ? 
   (<div className="min-h-screen bg-gradient-to-r from-blue-600 to-yellow-400 text-white flex flex-col items-center px-6 py-10">

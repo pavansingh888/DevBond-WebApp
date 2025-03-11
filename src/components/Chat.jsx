@@ -8,6 +8,7 @@ import { removeUser } from "../utils/userSlice";
 import { removeFeed } from "../utils/feedSlice";
 import { removeAllRequests } from "../utils/requestsSlice";
 import { addConnections, removeConnections } from "../utils/connectionsSlice";
+import Loader from "./Loader";
 
 const Chat = () => {
   const [messages, setMessages] = useState(
@@ -30,6 +31,7 @@ const Chat = () => {
   //fetch message on component mount
   const fetchChatMessages = async () => {
     try {
+      setLoading(true)
       const response = await axios.get(BASE_URL + "/chat/" + targetUserId, {
         withCredentials: true,
       });
@@ -65,6 +67,8 @@ const Chat = () => {
           }
         })
       }
+    } finally {
+      setLoading(false)
     }
   };
 
@@ -124,18 +128,28 @@ const Chat = () => {
   const fetchConnections = async () => {
     setLoading(true);
     try {
+      setLoading(true)
       const res = await axios.get(BASE_URL + "/user/connections", {
         withCredentials: true,
       });
       dispatch(addConnections(res?.data?.data));
     } catch (error) {
       // console.error(error);
-      navigate("/error", {
-        state: {
-          message: error?.message || "An unexpected error occurred",
-          note: "Error getting connection details."
-        }
-      })
+      if (error.status === 401) {
+        navigate("/login");
+        dispatch(removeUser());
+        dispatch(removeFeed());
+        dispatch(removeAllRequests());
+        dispatch(removeConnections());
+      } else {
+        // console.error("Error fetching chat messages:", error);
+        navigate("/error", {
+          state: {
+            message: error?.message || "An unexpected error occurred",
+            note: "Error getting connection details."
+          }
+        })
+      }
     } finally {
       setLoading(false);
     }
@@ -184,6 +198,10 @@ const Chat = () => {
       hour12: true,
     });
   };
+  
+  if(loading){
+    return <Loader/>;
+  }
 
   return (
     <div className="bg-slate-200 py-8">

@@ -1,16 +1,19 @@
 import axios from "axios";
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 // import { removeUserFromFeed } from "../utils/feedSlice";
 import { BASE_URL } from "../utils/constants";
+import Loader from "./Loader";
 
 const UserCard = ({ user, onNext }) => {
-  console.log(user);
+  // console.log(user);
   const { _id, firstName, lastName, age, gender, about, photoUrl } = user;
   const dispatch = useDispatch();
+  const [loading,setLoading] = useState(false);
 
   const handleSendRequest = async (status, userId) => {
     try {
+      setLoading(true)
       const res = await axios.post(
         BASE_URL + "/request/send/" + status + "/" + userId,
         {},
@@ -24,9 +27,24 @@ const UserCard = ({ user, onNext }) => {
       }
     } catch (error) {
       console.error(error);
+      if(error.status===401){
+        navigate("/login")
+     }else{
+      navigate("/error", {
+        state: {
+          message: error?.message || "An unexpected error occurred",
+          note: `Error ${status === 'interested' ? 'sending request to' : 'ignoring'} the user.`
+        }
+      })
+    }
+    } finally {
+      setLoading(false)
     }
   };
 
+  if (loading) {
+    return <Loader/>;
+  }
   return (
     <div className="flex flex-col justify-center my-8 mx-8 max-[320px]:mx-4 w-96 max-[470px]:w-72 max-[320px]:w-full">
       <div className="card glass w-full bg-gradient-to-r from-rose-500 to-blue-400 text-white shadow-blue-900 shadow-2xl">

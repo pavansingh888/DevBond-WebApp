@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { addUser } from "../utils/userSlice";
 import { useNavigate } from "react-router-dom";
@@ -15,10 +15,14 @@ const Login = () => {
   const [isLoginForm, setIsLoginForm] = useState(true);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const user = useSelector((store => store.user))
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, []);
+    if(user != null){
+      navigate('/')
+    }
+  }, [user]);
   
   const handleLogin = async () => {
     try {

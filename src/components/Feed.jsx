@@ -2,10 +2,14 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { BASE_URL } from "../utils/constants";
 import { useDispatch, useSelector } from "react-redux";
-import { addFeed, resetFeed } from "../utils/feedSlice";
+import { addFeed, removeFeed, resetFeed } from "../utils/feedSlice";
 import UserCard from "./UserCard";
 import { useNavigate } from "react-router-dom";
 import Loader from "./Loader";
+import { IoMdCheckmarkCircleOutline } from "react-icons/io";
+import { removeUser } from "../utils/userSlice";
+import { removeAllRequests } from "../utils/requestsSlice";
+import { removeConnections } from "../utils/connectionsSlice";
 
 const Feed = () => {
   const { users, currentPage, hasMore } = useSelector((store) => store?.feed);
@@ -23,12 +27,20 @@ const Feed = () => {
       dispatch(addFeed({ data: res.data.data, page }));
     } catch (error) {
       // console.error("ERROR fetching feed: " + error);
+      if(error.status===401){
+        navigate("/login")
+        dispatch(removeUser());
+        dispatch(removeFeed());
+        dispatch(removeAllRequests());
+        dispatch(removeConnections());
+     }else{
       navigate("/error", {
         state: {
           message: error?.message || "An unexpected error occurred",
           note: "Error fetching feed."
         }
       })
+    }
     } finally {
       setIsLoading(false); //marking loading as complete regardless of success or failure
     }
@@ -46,11 +58,11 @@ const Feed = () => {
   }, [currentUserIndex, users?.length, hasMore, currentPage]);
 
   //naviagting after loading is false
-  useEffect(() => {
-    if (!isLoading && !users) {
-      return navigate("/login");
-    }
-  }, [isLoading, users, navigate]);
+  // useEffect(() => {
+  //   if (!isLoading && !users) {
+  //     return navigate("/login");
+  //   }
+  // }, [isLoading, users, navigate]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -62,11 +74,17 @@ const Feed = () => {
 
   if (users?.length === 0 && !hasMore) {
     return (
-      <div className="min-h-screen flex justify-center items-center bg-slate-200">
-        <h1 className="text-lg font-semibold text-gray-800">
-          No new users found!
+      <div className="min-h-screen flex justify-center items-center bg-slate-100 p-4">
+      <div className="bg-white shadow-lg rounded-lg p-6 max-w-md text-center">
+        <IoMdCheckmarkCircleOutline className="text-4xl text-blue-500 mx-auto mb-3" />
+        <h1 className="text-xl font-semibold text-gray-800">
+          No More Profiles Available
         </h1>
+        <p className="text-gray-600 mt-2">
+          You have interacted with all the profiles. Please check back later for new connections!
+        </p>
       </div>
+    </div>
     );
   }
 
@@ -77,9 +95,17 @@ const Feed = () => {
       ) : users && users[currentUserIndex] ? (
         <UserCard user={users[currentUserIndex]} onNext={handleNextUser} />
       ) : (
-        <h1 className="text-lg font-semibold text-gray-800">
-          You have interacted with all the profiles.
+        <div className="min-h-screen flex justify-center items-center bg-slate-100 p-4">
+      <div className="bg-white shadow-lg rounded-lg p-6 max-w-md text-center">
+        <IoMdCheckmarkCircleOutline className="text-4xl text-blue-500 mx-auto mb-3" />
+        <h1 className="text-xl font-semibold text-gray-800">
+          No More Profiles Available
         </h1>
+        <p className="text-gray-600 mt-2">
+          You have interacted with all the profiles. Please check back later for new connections!
+        </p>
+      </div>
+    </div>
       )}
     </div>
   );

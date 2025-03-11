@@ -23,7 +23,13 @@ const NavBar = () => {
 
       return navigate("/login");
     } catch (error) {
-      console.error(error);
+      // console.error(error);
+      navigate('/error', {
+        state: {
+          message: error?.message || "An unexpected error occurred",
+          note: "Error Logging out."
+        }
+      })
     }
   };
 

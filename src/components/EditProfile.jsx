@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import { BASE_URL } from "../utils/constants";
 import { useDispatch, useSelector } from "react-redux";
-import { addUser } from "../utils/userSlice";
+import { addUser, removeUser } from "../utils/userSlice";
 import axios from "axios";
 import UserCard from './UserCard';
+import { removeFeed } from "../utils/feedSlice";
+import { removeAllRequests } from "../utils/requestsSlice";
+import { removeConnections } from "../utils/connectionsSlice";
 
 const EditProfile = ({ user, showProfile, handleShowProfile }) => {
   const [firstName, setFirstName] = useState(user.firstName);
@@ -19,11 +22,11 @@ const EditProfile = ({ user, showProfile, handleShowProfile }) => {
   const saveProfile = async () => {
     try {
       if (!isValidString(firstName)) {
-        setError("Minimum 3 alphabet only characters required in first name.");
+        setError("Minimum 3 to maximum 50 alphabet only characters required in first name.");
         return;
       }
       if (!isValidString(lastName)) {
-        setError("Minimum 3 alphabet only characters required in last name.");
+        setError("Minimum 3 to maximum 50 alphabet only characters required in last name.");
         return;
       }
       if (!isValidUrl(photoUrl)) {
@@ -54,18 +57,28 @@ const EditProfile = ({ user, showProfile, handleShowProfile }) => {
       }, 3000);
       !showProfile && handleShowProfile();
     } catch (error) {
-      setError(error);
       console.log(error);
+      if (error.status === 401) {
+        navigate("/login");
+        dispatch(removeUser());
+        dispatch(removeFeed());
+        dispatch(removeAllRequests());
+        dispatch(removeConnections());
+      } else {
+      setError(error.response.data);
+      }
     }
   };
 
   function isValidString(input) {
+    
+    
     if (
       !input ||
-      input.length < 4 ||
+      input.length < 3 ||
       input.length > 50 ||
-      !/^[a-zA-Z]+$/.test(input)
-    ) {
+      !/^[a-zA-Z\s]+$/.test(input)
+    ) {console.log("isValid", input);
       return false;
     }
     return true;
