@@ -21,7 +21,8 @@ const Feed = () => {
 
   const fetchFeedPage = async (page = 1) => {
     try {
-      const res = await axios.get(`${BASE_URL}/feed?page=${page}&limit=1`, {
+      setIsLoading(true)
+      const res = await axios.get(`${BASE_URL}/feed?page=${page}&limit=3`, {
         withCredentials: true,
       });
       dispatch(addFeed({ data: res.data.data, page }));
@@ -95,7 +96,6 @@ const Feed = () => {
       ) : users && users[currentUserIndex] ? (
         <UserCard user={users[currentUserIndex]} onNext={handleNextUser} />
       ) : (
-        <div className="min-h-screen flex justify-center items-center bg-slate-100 p-4">
       <div className="bg-white shadow-lg rounded-lg p-6 max-w-md text-center">
         <IoMdCheckmarkCircleOutline className="text-4xl text-blue-500 mx-auto mb-3" />
         <h1 className="text-xl font-semibold text-gray-800">
@@ -105,7 +105,6 @@ const Feed = () => {
           You have interacted with all the profiles. Please check back later for new connections!
         </p>
       </div>
-    </div>
       )}
     </div>
   );

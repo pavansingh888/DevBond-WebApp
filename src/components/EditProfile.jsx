@@ -29,12 +29,20 @@ const EditProfile = ({ user, showProfile, handleShowProfile }) => {
         setError("Minimum 3 to maximum 50 alphabet only characters required in last name.");
         return;
       }
-      if (!isValidUrl(photoUrl)) {
-        setError("Please provide a valid photo URL.");
+      if (!isValidPhotoUrl(photoUrl)) {
+        setError("Please provide a valid photo URL. URLs must end with .jpg, .jpeg, .png, .gif, .webp, or .svg.");
         return;
       }
       if (!isValidAge(age)) {
-        setError("Please provide a valid age.");
+        setError("Age must be a number between 18 and 120.");
+        return;
+      }
+      if (!isValidGender(gender)) {
+        setError("Gender must be one of: male, female, others.");
+        return;
+      }
+      if (!isValidAbout(about)) {
+        setError("About section cannot exceed 500 characters.");
         return;
       }
       setError("");
@@ -83,16 +91,21 @@ const EditProfile = ({ user, showProfile, handleShowProfile }) => {
     }
     return true;
   }
-  function isValidUrl(input) {
-    if (
-      !input ||
-      input.length < 3 ||
-      !/^(https?:\/\/)?([\w.-]+)\.([a-z]{2,})([\/\w .-]*)*\/?$/.test(input) ||
-      (!input.startsWith("http://") && !input.startsWith("https://"))
-    ) {
+  function isValidPhotoUrl(url) {
+    // First check if it's a valid URL
+    try {
+      new URL(url);
+    } catch (e) {
       return false;
     }
-    return true;
+    
+    // Check if URL ends with common image extensions
+    const validImageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp', '.svg'];
+    const lowercaseUrl = url.toLowerCase();
+    
+    return validImageExtensions.some(ext => lowercaseUrl.endsWith(ext)) || 
+           // Check for image URLs that might not have extension in the path
+           /\.(jpg|jpeg|png|gif|bmp|webp|svg)($|\?)/i.test(url);
   }
   function isValidAge(input) {
     if (
@@ -102,6 +115,18 @@ const EditProfile = ({ user, showProfile, handleShowProfile }) => {
       input <= 17 ||
       input >= 105
     ) {
+      return false;
+    }
+    return true;
+  }
+  function isValidGender(input) {
+    if (!["male", "female", "others"].includes(input.toLowerCase())) {
+      return false;
+    }
+    return true;
+  }
+  function isValidAbout(input) {
+    if (about.length > 500) {
       return false;
     }
     return true;

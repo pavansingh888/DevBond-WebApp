@@ -7,9 +7,11 @@ import Loader from "./Loader";
 import { IoPersonRemoveOutline } from "react-icons/io5";
 import { removeUser } from "../utils/userSlice";
 import { removeFeed } from "../utils/feedSlice";
-import { removeConnections } from "../utils/connectionsSlice";
+import { addNewConnection, removeConnections } from "../utils/connectionsSlice";
+import { useNavigate } from "react-router-dom";
 
 const Requests = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const requests = useSelector((store) => store.requests);
   const [loading,setLoading] = useState(false)
@@ -45,14 +47,18 @@ const Requests = () => {
   const reviewRequest = async (status, _id) => {
     try {
       setLoading(true)
-      await axios.post(
+      const res=await axios.post(
         BASE_URL + "/request/review/" + status + "/" + _id,
         {},
         { withCredentials: true }
       );
+      // console.log(res?.data?.data);
+      if(status==="accepted"){
+        dispatch(addNewConnection(res?.data?.data))
+      }
       dispatch(removeRequest(_id));
     } catch (error) {
-      // console.error(error);
+      console.error(error);
       if(error.status===401){
         navigate("/login")
         dispatch(removeUser());

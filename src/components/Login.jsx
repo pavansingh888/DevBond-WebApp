@@ -5,6 +5,7 @@ import { addUser } from "../utils/userSlice";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../utils/constants";
 import { Link } from "react-router-dom";
+import validator from "validator"
 
 const Login = () => {
   const [error, setError] = useState("");
@@ -27,23 +28,35 @@ const Login = () => {
   const handleLogin = async () => {
     try {
       setError("");
+      validateLoginData();
       const res = await axios.post(
         `${BASE_URL}/login`,
         { emailId, password },
         { withCredentials: true }
       );
-      // console.log(res);
       
       dispatch(addUser(res.data.data));
       navigate("/");
     } catch (error) {
       setError(error.response?.data || "Login failed");
+      if (error.response) {
+      } else if (error.request) {
+        //axios error with no response (network issue)
+        setError("Network error. Please check your connection.");
+      } else if (error.message) {
+        //regular Error object (including validation errors)
+        setError(error.message);
+      } else {
+        //fallback for any other error
+        setError("Signup failed. Please try again.");
+      }
     }
   };
 
   const handleSignUp = async () => {
     try {
       setError("");
+      validateSignUpData();
       const res = await axios.post(
         `${BASE_URL}/signup`,
         { firstName, lastName, emailId, password },
@@ -52,9 +65,52 @@ const Login = () => {
       dispatch(addUser(res.data.data));
       navigate("/profile");
     } catch (error) {
-      setError(error.response?.data || "Signup failed");
+      if (error.response) {
+        setError(error.response?.data || "Server error occurred");
+      } else if (error.request) {
+        setError("Network error. Please check your connection.");
+      } else if (error.message) {
+        setError(error.message);
+      } else {
+        setError("Signup failed. Please try again.");
+      }
+      
     }
   };
+
+  const validateSignUpData = () => {
+  
+    if (!firstName && !lastName && !emailId && !password) {
+      throw new Error("Please enter details to proceed!");
+    } else if (
+      !validator.isAlpha(firstName) ||
+      firstName.length < 3 ||
+      firstName.length > 50 ||
+      !validator.isAlpha(lastName) ||
+      lastName.length < 3 ||
+      lastName.length > 50
+    ) {
+      throw new Error(
+        "Minimum 3 to maximum 50 alphabet only characters required in first name and Last name."
+      );
+    } else if (!validator.isEmail(emailId)) {
+      throw new Error("Invalid Email: Please enter a valid email.");
+    } else if (!validator.isStrongPassword(password)) {
+      throw new Error(
+        "Invalid password: Must contain 8+ characters with at least 1 lowercase letter, 1 uppercase letter, 1 number, and 1 special character."
+      );
+    }
+  };
+
+  const validateLoginData = () => {
+    if (!validator.isEmail(emailId)) {
+      throw new Error("Invalid Email: Please enter a valid email.");
+    } else if (!validator.isStrongPassword(password)) {
+      throw new Error(
+        "Invalid password: Must contain 8+ characters with at least 1 lowercase letter, 1 uppercase letter, 1 number, and 1 special character."
+      );
+    }
+  }
 
   return (
     <div className="items-center justify-evenly min-h-screen  text-gray-700 flex flex-wrap ">
@@ -77,7 +133,7 @@ const Login = () => {
         <h1 className="text-2xl font-bold text-center mb-6">
           {isLoginForm ? "Login to Your Account" : "Create an Account"}
         </h1>
-        {error && <p className="text-red-500 text-center mb-4">{error}</p>}
+        
         <form
           className="space-y-4 "
           onSubmit={(e) => {
@@ -147,6 +203,7 @@ const Login = () => {
               required
             />
           </div>
+          {error && <p className="text-red-500 text-center mb-4">{error}</p>}
           <button
             type="submit"
             className="btn btn-primary text-white w-full mt-4"
@@ -158,7 +215,14 @@ const Login = () => {
           {isLoginForm ? "Don't have an account?" : "Already have an account?"}{" "}
           <button
             className="text-blue-600 hover:underline"
-            onClick={() => setIsLoginForm(!isLoginForm)}
+            onClick={() => {
+              setError("")
+              setEmailId("")
+              setFirstName("")
+              setLastName("")
+              setPassword("")
+              setIsLoginForm(!isLoginForm)
+            }}
           >
             {isLoginForm ? "Sign Up" : "Login"}
           </button>
