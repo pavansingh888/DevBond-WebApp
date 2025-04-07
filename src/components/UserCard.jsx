@@ -48,9 +48,13 @@ const UserCard = ({ user, onNext }) => {
   return (
     <div className="flex flex-col justify-center my-8 mx-8 max-[320px]:mx-4 w-96 max-[470px]:w-72 max-[320px]:w-full">
       <div className="card glass w-full bg-gradient-to-r from-rose-500 to-blue-400 text-white shadow-blue-900 shadow-2xl">
-        <figure>
-          <img src={photoUrl} alt="photo" />
-        </figure>
+      <figure className="w-full h-96 flex items-center justify-center bg-gray-300 mx-auto">
+  <img
+    src={photoUrl || "https://geographyandyou.com/images/user-profile.png"}
+    alt="photo"
+    className="w-full h-full object-cover"
+  />
+</figure>
         <div className="card-body">
           <h2 className="card-title">{firstName + " " + lastName}</h2>
           {age && gender && <p>{age + ", " + gender}</p>}

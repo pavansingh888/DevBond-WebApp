@@ -83,12 +83,12 @@ const Login = () => {
     if (!firstName && !lastName && !emailId && !password) {
       throw new Error("Please enter details to proceed!");
     } else if (
-      !validator.isAlpha(firstName) ||
-      firstName.length < 3 ||
-      firstName.length > 50 ||
-      !validator.isAlpha(lastName) ||
-      lastName.length < 3 ||
-      lastName.length > 50
+      !validator.matches(firstName, /^[A-Za-z\s]+$/) ||
+      firstName.trim().length < 3 ||
+      firstName.trim().length > 50 ||
+      !validator.matches(lastName, /^[A-Za-z\s]+$/) ||
+      lastName.trim().length < 3 ||
+      lastName.trim().length > 50
     ) {
       throw new Error(
         "Minimum 3 to maximum 50 alphabet only characters required in first name and Last name."

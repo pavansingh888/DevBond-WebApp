@@ -11,7 +11,7 @@ import { removeConnections } from "../utils/connectionsSlice";
 const EditProfile = ({ user, showProfile, handleShowProfile }) => {
   const [firstName, setFirstName] = useState(user.firstName);
   const [lastName, setLastName] = useState(user.lastName);
-  const [photoUrl, setPhotoUrl] = useState(user.photoUrl);
+  const [photoUrl, setPhotoUrl] = useState(user.photoUrl || "https://geographyandyou.com/images/user-profile.png");
   const [age, setAge] = useState(user.age || "");
   const [gender, setGender] = useState(user.gender || "");
   const [about, setAbout] = useState(user.about || "");
@@ -95,17 +95,10 @@ const EditProfile = ({ user, showProfile, handleShowProfile }) => {
     // First check if it's a valid URL
     try {
       new URL(url);
+      return true;
     } catch (e) {
       return false;
     }
-    
-    // Check if URL ends with common image extensions
-    const validImageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp', '.svg'];
-    const lowercaseUrl = url.toLowerCase();
-    
-    return validImageExtensions.some(ext => lowercaseUrl.endsWith(ext)) || 
-           // Check for image URLs that might not have extension in the path
-           /\.(jpg|jpeg|png|gif|bmp|webp|svg)($|\?)/i.test(url);
   }
   function isValidAge(input) {
     if (
