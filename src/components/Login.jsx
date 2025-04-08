@@ -83,10 +83,10 @@ const Login = () => {
     if (!firstName && !lastName && !emailId && !password) {
       throw new Error("Please enter details to proceed!");
     } else if (
-      !validator.matches(firstName, /^[A-Za-z\s]+$/) ||
+      !validator.matches(firstName.trim(), /^[A-Za-z\s]+$/) ||
       firstName.trim().length < 3 ||
       firstName.trim().length > 50 ||
-      !validator.matches(lastName, /^[A-Za-z\s]+$/) ||
+      !validator.matches(lastName.trim(), /^[A-Za-z\s]+$/) ||
       lastName.trim().length < 3 ||
       lastName.trim().length > 50
     ) {

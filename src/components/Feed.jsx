@@ -22,7 +22,7 @@ const Feed = () => {
   const fetchFeedPage = async (page = 1) => {
     try {
       setIsLoading(true)
-      const res = await axios.get(`${BASE_URL}/feed?page=${page}&limit=3`, {
+      const res = await axios.get(`${BASE_URL}/feed?page=${page}&limit=10`, {
         withCredentials: true,
       });
       dispatch(addFeed({ data: res.data.data, page }));
